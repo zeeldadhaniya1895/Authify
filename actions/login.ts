@@ -23,23 +23,20 @@ export const login=async (values:z.infer<typeof LoginSchema>)=>{
     {
         return {error:"User does not exist!"}
     }
-    if(!existingUser.emailVerified)
-    {  const passwordsMatch=await bcrypt.compare(password,existingUser.password);
-        if(passwordsMatch)
-        {
-            const verificationToken=await generateVerificationToken(existingUser.email)
-        await sendVerificationEmail(
-            verificationToken.email,
-            verificationToken.token,
-        )
-        
-         
-        return {sucess: "Confirmation email sent!"}
-        }
-        else
+    const passwordsMatch=await bcrypt.compare(password,existingUser.password);
+        if(!passwordsMatch)
         {
             return {error:"Wrong password!"}
         }
+
+    if(!existingUser.emailVerified)
+    {  
+        const verificationToken=await generateVerificationToken(existingUser.email)
+        await sendVerificationEmail(
+            verificationToken.email,
+            verificationToken.token,
+        )    
+        return {sucess: "Confirmation email sent!"} 
     }
 
     try{
@@ -52,7 +49,8 @@ export const login=async (values:z.infer<typeof LoginSchema>)=>{
             switch(error.type)
             {
                case "CredentialsSignin" : return {error:"Invalid credentials!"}
-               default: return{error:"Something went wrong!"}
+               default: {console.log(error.type)
+                return{error:"Something went wrong!"}}
             }
         }
        throw error; // throw karvi jaruri nakar tamne default page upar redirect nai kare

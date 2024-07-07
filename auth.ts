@@ -30,6 +30,7 @@ export const { auth, handlers:{GET,POST}, signIn, signOut } = NextAuth({
         if(!existingUser?.emailVerified) return false;
         return true;
       },
+     
       async session({token,session})
       {   if(token.sub&&session.user)
           {
