@@ -5,6 +5,9 @@ import { getPasswordResetTokenByToken } from "@/data/password-reset-token";
 import { getUserByEmail } from "@/data/user";
 import bcrypt from "bcryptjs";
 import { db } from "@/lib/db";
+import { AuthError } from "next-auth";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
+import { signIn } from "@/auth";
 
 export const newPassword=async(values:z.infer<typeof NewPasswordSchema>,token?:string|null,)=>{
 
@@ -17,7 +20,7 @@ export const newPassword=async(values:z.infer<typeof NewPasswordSchema>,token?:s
     if(!validatedFields){
         return {error:"Invalid fields!"};
     }
-    const{password}=validatedFields.data;
+    const { password } = validatedFields.data as { password: string }; 
     
     const existingToken=await getPasswordResetTokenByToken(token);
 
@@ -34,7 +37,7 @@ export const newPassword=async(values:z.infer<typeof NewPasswordSchema>,token?:s
     {
         return {error:"Email does not exist!"}
     }
-
+    const email=existingToken.email;
 
     const hashedPassword=await bcrypt.hash(password,10);
     await db.user.update({
@@ -44,5 +47,22 @@ export const newPassword=async(values:z.infer<typeof NewPasswordSchema>,token?:s
     await db.passwordResetToken.delete({
         where:{id:existingToken.id}
     })
+    
+    try{
+        await signIn("credentials",{
+            email,password,redirectTo:DEFAULT_LOGIN_REDIRECT,
+        })//aa same rite google mate pan lakhi sakay pan google vadu client side karva mate alag thi karel 6
+    }catch(error){
+        if(error instanceof AuthError )
+        {
+            switch(error.type)
+            {
+               case "CredentialsSignin" : return {error:"Invalid credentials!"}
+               default: {console.log(error.type)
+                return{error:"Something went wrong!"}}
+            }
+        }
+       throw error; // throw karvi jaruri nakar tamne default page upar redirect nai kare
+    }
     return{sucess:"password is updated!"}
 }
