@@ -58,11 +58,11 @@ export const newPassword=async(values:z.infer<typeof NewPasswordSchema>,token?:s
             switch(error.type)
             {
                case "CredentialsSignin" : return {error:"Invalid credentials!"}
-               default: {console.log(error.type)
+               default: {
                 return{error:"Something went wrong!"}}
             }
         }
        throw error; // throw karvi jaruri nakar tamne default page upar redirect nai kare
     }
-    return{sucess:"password is updated!"}
+    return{success:"password is updated!"}
 }

@@ -18,18 +18,18 @@ import {
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { FormError } from "../form-error";
-import { FormSucess } from "../form-sucess";
+import { FormSuccess } from "../form-success";
 import { reset } from "@/actions/reset";
 
 export function ResetForm() {
 
   const [error, setError] = useState<string|undefined>("");
-  const [sucess, setSucess] = useState<string|undefined>("");
+  const [success, setSuccess] = useState<string|undefined>("");
   const [isPending,startTransition]=useTransition();
  
   const handleSubmit=(values:z.infer<typeof ResetSchema>)=>{
     setError("");
-    setSucess("");
+    setSuccess("");
       startTransition(()=>{
         reset(values).then((data)=>{
           
@@ -37,7 +37,7 @@ export function ResetForm() {
           setError(data?.error);
 
    
-          setSucess(data?.sucess);
+          setSuccess(data?.success);
           
         });
         form.reset();
@@ -79,7 +79,7 @@ export function ResetForm() {
               )}
             />
               <FormError message={error}/>
-              <FormSucess message={sucess}/>
+              <FormSuccess message={success}/>
                       
             <Button type="submit" className="w-full " disabled={isPending}>Send password reset email</Button>
 

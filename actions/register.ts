@@ -36,5 +36,5 @@ await sendVerificationEmail(
     verificationToken.token,
 )
 
-    return {sucess:"Confirmation email sent!"};
+    return {success:"Confirmation email sent!"};
 }

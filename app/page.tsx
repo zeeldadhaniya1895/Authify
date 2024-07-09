@@ -11,7 +11,7 @@ export default function Home() {
       </h1>
       <p>A simple authentication component.</p>
     
-    <LoginButton>
+    <LoginButton mode="modal" asChild>
     <Button variant="secondary" size="lg" className="self-center">
         login
     </Button>

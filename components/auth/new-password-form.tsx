@@ -20,7 +20,7 @@ import { Input } from "../ui/input";
 import { Eye, EyeOff } from "lucide-react";
 import { Button } from "../ui/button";
 import { FormError } from "../form-error";
-import { FormSucess } from "../form-sucess";
+import { FormSuccess } from "../form-success";
 import { newPassword } from "@/actions/new-password";
 import Link from "next/link";
 
@@ -31,7 +31,7 @@ const token = searchParams.get("token");
 
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string|undefined>("");
-  const [sucess, setSucess] = useState<string|undefined>("");
+  const [success, setSuccess] = useState<string|undefined>("");
 
 
   const togglePasswordVisibility = () => {
@@ -40,7 +40,7 @@ const token = searchParams.get("token");
 
   const handleSubmit=(values:z.infer<typeof NewPasswordSchema>)=>{
     setError("");
-    setSucess("");
+    setSuccess("");
       startTransition(()=>{
         newPassword(values,token).then((data)=>{
           
@@ -48,7 +48,7 @@ const token = searchParams.get("token");
           setError(data?.error);
 
    
-          setSucess(data?.sucess);
+          setSuccess(data?.success);
           
         });
         form.reset();
@@ -106,7 +106,7 @@ const [isPending,startTransition]=useTransition();
             </div>
 
               <FormError message={error}/>
-              <FormSucess message={sucess}/>
+              <FormSuccess message={success}/>
                       
             <Button type="submit" className="w-full " disabled={isPending}>Reset password</Button>
 

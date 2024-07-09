@@ -19,14 +19,14 @@ import { Input } from "../ui/input";
 import { Eye, EyeOff } from "lucide-react";
 import { Button } from "../ui/button";
 import { FormError } from "../form-error";
-import { FormSucess } from "../form-sucess";
+import { FormSuccess } from "../form-success";
 import { register } from "@/actions/register";
 
 export function RegisterForm() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string|undefined>("");
-  const [sucess, setSucess] = useState<string|undefined>("");
+  const [success, setSuccess] = useState<string|undefined>("");
 
 
   const togglePasswordVisibility = () => {
@@ -35,11 +35,11 @@ export function RegisterForm() {
 
   const handleSubmit=(values:z.infer<typeof RegisterSchema>)=>{
     setError("");
-    setSucess("");
+    setSuccess("");
       startTransition(()=>{
         register(values).then((data)=>{
           setError(data.error);
-          setSucess(data.sucess);
+          setSuccess(data.success);
         });
         form.reset();
       });
@@ -134,7 +134,7 @@ const [isPending,startTransition]=useTransition();
             </div>
 
               <FormError message={error}/>
-              <FormSucess message={sucess}/>
+              <FormSuccess message={success}/>
                       
             <Button type="submit" className="w-full " disabled={isPending}>Create an account</Button>
 

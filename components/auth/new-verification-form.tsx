@@ -4,19 +4,19 @@ import {RingLoader} from "react-spinners";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect,useState } from "react";
 import { newVerification } from "@/actions/new-verificaion";
-import { set } from "zod";
 import { FormError } from "../form-error";
-import { FormSucess } from "../form-sucess";
+import { FormSuccess } from "@/components/form-success";
 
 export default function NewVerificationForm() {
     const [error,setError]=useState<string|undefined>();
-    const[sucess,setSucess]=useState<string|undefined>();
+    const[success,setSuccess]=useState<string|undefined>();
 
 
     const searchParams=useSearchParams();
     const token =searchParams.get("token");
     const onSubmit=useCallback(()=>{
-        if(sucess||error) return;
+        if(success||error) return;
+
         if(!token)
         {
             setError("missing token");
@@ -24,10 +24,10 @@ export default function NewVerificationForm() {
         }
         newVerification(token)
         .then((data)=>{
-            setSucess(data.sucess);
+            setSuccess(data.success);
             setError(data.error);
         })
-    },[token,sucess,error])
+    },[token,success,error])
 
     useEffect(()=>{
         onSubmit();
@@ -38,9 +38,9 @@ export default function NewVerificationForm() {
          backButtonLabel="Back to login"
          backButtonHref="/auth/login">
             <div className="flex items-center w-full justify-center">
-            {!sucess&&!error && (<RingLoader />)}
-            <FormSucess message={sucess}/>
-            {!sucess&&(<FormError message={error}/>)}
+            {!success&&!error && (<RingLoader />)}
+            <FormSuccess message={success}/>
+            {!success&&(<FormError message={error}/>)}
             
             </div>
 
