@@ -84,23 +84,6 @@ export default function SettingsPage() {
                 }
               />
               {user?.isOAuth===false&&(<>
-                <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Email
-                    </FormLabel>
-                    <FormControl>
-                      <Input {...field} type="email" placeholder="Enter your email " disabled={isPending}></Input>
-                    </FormControl>
-                    <FormMessage/>
-                  </FormItem>
-                )
-
-                }
-              />
               <FormField
                 control={form.control}
                 name="password"
