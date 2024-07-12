@@ -22,7 +22,7 @@ import { Button } from "../ui/button";
 import { FormError } from "../form-error";
 import { FormSuccess } from "../form-success";
 import { newPassword } from "@/actions/new-password";
-import Link from "next/link";
+
 
 export function NewPasswordForm() {
 

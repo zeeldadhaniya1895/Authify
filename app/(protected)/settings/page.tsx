@@ -3,7 +3,7 @@
 import { setting } from "@/actions/setting"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { useTransition, useState } from "react"
+import { useTransition, useState, useEffect } from "react"
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { SettingSchema } from "@/schemas"
@@ -18,17 +18,31 @@ import { FormError } from "@/components/form-error"
 import { Select,SelectContent,SelectItem,SelectTrigger, SelectValue } from "@/components/ui/select"
 import { UserRole } from "@prisma/client"
 import{Switch} from "@/components/ui/switch"
+import { Eye, EyeOff } from "lucide-react"
 
 export default function SettingsPage() {
 
   const user = useCurrentUser();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword2, setShowPassword2] = useState(false);
+
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
 
+  useEffect(()=>{update()},[])
+
   const [isPending, startTransition] = useTransition();
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+  const togglePasswordVisibility2 = () => {
+    setShowPassword2(!showPassword2);
+  };
   const { update } = useSession();
   const onSubmite = (values: z.infer<typeof SettingSchema>) => {
     startTransition(() => {
+      setError("");
+      setSuccess("");
       setting(values)
         .then((data) => {
           if (data.error) {
@@ -36,7 +50,13 @@ export default function SettingsPage() {
           }
           if (data.success) {
             update();
+
             setSuccess(data.success);
+            form.reset({
+              ...values,
+              password: undefined,
+              newPassword: undefined,
+            });
           }
         })
         .catch(() => setError("Something went wrong!"));
@@ -84,40 +104,62 @@ export default function SettingsPage() {
                 }
               />
               {user?.isOAuth===false&&(<>
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Password
-                    </FormLabel>
-                    <FormControl>
-                      <Input {...field} type="password" placeholder="Enter you existing password" disabled={isPending}></Input>
-                    </FormControl>
-                    <FormMessage/>
-                  </FormItem>
-                )
+                <div className="relative">
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Password</FormLabel>
+                      <FormControl>
+                        <Input {...field}
+                          disabled={isPending}
+                          placeholder="Enter your password"
+                          type={showPassword ? "text" : "password"}
+                        />
+                      </FormControl>
+                      <span
+                        className="absolute inset-y-11 right-3 flex items-center cursor-pointer w-5"
+                        onClick={togglePasswordVisibility}
+                      >
+                        <i className={showPassword ? "fas fa-eye" : "fas fa-eye-slash"}></i>
+                        {showPassword && <Eye />}
+                        {!showPassword && <EyeOff />}
 
-                }
-              />
-              <FormField
-                control={form.control}
-                name="newPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                     New Password
-                    </FormLabel>
-                    <FormControl>
-                      <Input {...field} type="password" placeholder="Enter new password" disabled={isPending}></Input>
-                    </FormControl>
-                    <FormMessage/>
-                  </FormItem>
-                )
+                      </span>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="relative">
+                <FormField
+                  control={form.control}
+                  name="newPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>New password</FormLabel>
+                      <FormControl>
+                        <Input {...field}
+                          disabled={isPending}
+                          placeholder="Enter new password"
+                          type={showPassword2 ? "text" : "password"}
+                        />
+                      </FormControl>
+                      <span
+                        className="absolute inset-y-11 right-3 flex items-center cursor-pointer w-5"
+                        onClick={togglePasswordVisibility2}
+                      >
+                        <i className={showPassword2 ? "fas fa-eye" : "fas fa-eye-slash"}></i>
+                        {showPassword2 && <Eye />}
+                        {!showPassword2 && <EyeOff />}
 
-                }
-              />
+                      </span>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
               </>)}
               
               <FormField

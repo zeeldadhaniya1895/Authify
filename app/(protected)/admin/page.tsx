@@ -24,7 +24,7 @@ export default function AdminPage() {
         })
     }
     const onapiRouteClick=()=>{
-       fetch("/api/admine ").then((res)=>{
+       fetch("/api/Admin").then((res)=>{
             if(res.ok){
                 toast.success("Allowed API Route")
             }

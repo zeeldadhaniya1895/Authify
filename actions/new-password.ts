@@ -48,21 +48,6 @@ export const newPassword=async(values:z.infer<typeof NewPasswordSchema>,token?:s
         where:{id:existingToken.id}
     })
     
-    try{
-        await signIn("credentials",{
-            email,password,redirectTo:DEFAULT_LOGIN_REDIRECT,
-        })//aa same rite google mate pan lakhi sakay pan google vadu client side karva mate alag thi karel 6
-    }catch(error){
-        if(error instanceof AuthError )
-        {
-            switch(error.type)
-            {
-               case "CredentialsSignin" : return {error:"Invalid credentials!"}
-               default: {
-                return{error:"Something went wrong!"}}
-            }
-        }
-       throw error; // throw karvi jaruri nakar tamne default page upar redirect nai kare
-    }
+    
     return{success:"password is updated!"}
 }

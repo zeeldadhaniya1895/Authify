@@ -52,7 +52,7 @@ export default function UserInfo({user,label}:UseInfoProps) {
                     <p className="text-sm font-medium">
                         Two Factor Authentication
                     </p>
-                    <Badge variant={user?.isTwoFactorEnabled?"success":"success"}>
+                    <Badge variant={user?.isTwoFactorEnabled?"success":"destructive"}>
                     {user?.isTwoFactorEnabled ? "On":"Off"}
                     </Badge>
                 </div>
